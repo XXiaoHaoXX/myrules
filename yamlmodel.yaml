@@ -55,7 +55,14 @@ proxy-groups:
 
 # 4. 规则提供者 (Rule Providers)
 rule-providers:
-  # ----------------- 国内直连规则 -----------------
+  # 添加以下缺失的规则集
+  fakeipfilter_domain:
+    type: http
+    interval: 86400
+    behavior: domain
+    format: text
+    url: "https://raw.githubusercontent.com/wwqgtxx/clash-rules/release/fakeip-filter.mrs"  
+    # ----------------- 国内直连规则 -----------------
   private_ip:
     <<: *ip
     url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/LocalAreaNetwork.list"
@@ -137,7 +144,7 @@ rule-providers:
     <<: *class
     url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ProxyGFWlist.list"
   geolocation_non_cn:
-    输入: file
+    type: file
     behavior: classical
     path: ./ruleset/geolocation-!cn.yaml
     append-rules:
