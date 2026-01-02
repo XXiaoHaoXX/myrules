@@ -137,52 +137,52 @@ rule-providers:
     <<: *class
     url: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/ProxyGFWlist.list"
   geolocation_non_cn:
-    type: file
+    输入: file
     behavior: classical
     path: ./ruleset/geolocation-!cn.yaml
     append-rules:
       - GEOSITE,geolocation-!cn
 
-# 5. 规则 (Rules)
+# 5. 规则 (Rules) - 请用这个版本替换您模板中的 rules 段落
 rules:
   # >>>>> 1. 强制直连 - 优先级最高 <<<<<
-  - RULE-PROVIDER,private_ip,直连
-  - RULE-PROVIDER,cn_ip,直连 
-  - RULE-PROVIDER,private_domain,直连
+  - RULE-SET,private_ip,直连   # 注意：RULE-PROVIDER 改为 RULE-SET
+  - RULE-SET,cn_ip,直连 
+  - RULE-SET,private_domain,直连
   
   # >>>>> 2. 国内域名/游戏直连 - 强化 Steam 和 PoE 直连 <<<<<
   - DOMAIN-KEYWORD,steamcontent.com,直连
   - DOMAIN-SUFFIX,steamcdn-a.akamaihd.net,直连
   - DOMAIN-SUFFIX,pathofexile.com,直连
   - DOMAIN-SUFFIX,pathofexile.cn,直连
-  - RULE-PROVIDER,cn_domain,直连
-  - RULE-PROVIDER,steam_cn,直连 
+  - RULE-SET,cn_domain,直连
+  - RULE-SET,steam_cn,直连 
   - DOMAIN-SUFFIX,warframe.com,直连
   - DOMAIN-SUFFIX,digitalextremes.com,直连
   - DOMAIN-SUFFIX,qq.com,直连
   
   # >>>>> 3. 精确服务代理 - 独立 Select 组 (精确优先) <<<<<
-  - RULE-PROVIDER,ai_services,🤖 AI 服务
-  - RULE-PROVIDER,youtube_domain,📹 YouTube
-  - RULE-PROVIDER,netflix_domain,🎥 NETFLIX
-  - RULE-PROVIDER,netflix_ip,🎥 NETFLIX 
-  - RULE-PROVIDER,tiktok_domain,🎵 TikTok
+  - RULE-SET,ai_services,🤖 AI 服务
+  - RULE-SET,youtube_domain,📹 YouTube
+  - RULE-SET,netflix_domain,🎥 NETFLIX
+  - RULE-SET,netflix_ip,🎥 NETFLIX 
+  - RULE-SET,tiktok_domain,🎵 TikTok
   
   # >>>>> 4. 国际服务 - 通用 Select 组 (精确优先) <<<<<
-  - RULE-PROVIDER,google_domain,🚀 默认代理
-  - RULE-PROVIDER,github_domain,🚀 默认代理
-  - RULE-PROVIDER,onedrive_domain,🚀 默认代理
-  - RULE-PROVIDER,microsoft_domain,🚀 默认代理
-  - RULE-PROVIDER,telegram_domain,🚀 默认代理
-  - RULE-PROVIDER,paypal_domain,🚀 默认代理
-  - RULE-PROVIDER,speedtest_domain,🚀 默认代理
-  - RULE-PROVIDER,apple_domain,🚀 默认代理
+  - RULE-SET,google_domain,🚀 默认代理
+  - RULE-SET,github_domain,🚀 默认代理
+  - RULE-SET,onedrive_domain,🚀 默认代理
+  - RULE-SET,microsoft_domain,🚀 默认代理
+  - RULE-SET,telegram_domain,🚀 默认代理
+  - RULE-SET,paypal_domain,🚀 默认代理
+  - RULE-SET,speedtest_domain,🚀 默认代理
+  - RULE-SET,apple_domain,🚀 默认代理
   
-  - RULE-PROVIDER,google_ip,🚀 默认代理
-  - RULE-PROVIDER,telegram_ip,🚀 默认代理
-  - RULE-PROVIDER,apple_ip,🚀 默认代理
+  - RULE-SET,google_ip,🚀 默认代理
+  - RULE-SET,telegram_ip,🚀 默认代理
+  - RULE-SET,apple_ip,🚀 默认代理
   
   # >>>>> 5. 兜底/最后捕获 (通用靠后) <<<<<
-  - RULE-PROVIDER,proxylite,🚀 默认代理 
-  - RULE-PROVIDER,geolocation_non_cn,🚀 默认代理
+  - RULE-SET,proxylite,🚀 默认代理 
+  - RULE-SET,geolocation_non_cn,🚀 默认代理
   - MATCH,🐟 漏网之鱼
