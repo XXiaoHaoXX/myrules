@@ -18,7 +18,7 @@
 proxy-providers:
   订阅1:  # ← 改成你想要的名字（如 机场A）
     url: "https://your-subscribe-link1.com/clash"  # ← 替换为你的订阅链接
-    type: http
+    输入: http
     interval: 86400
     health-check:
       enable: true
@@ -231,3 +231,4 @@ rules:
   - RULE-SET,geolocation-!cn,🚀 默认代理
   - RULE-SET,cn_domain,直连
   - MATCH,🐟 漏网之鱼
+
