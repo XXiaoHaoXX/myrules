@@ -119,7 +119,7 @@ proxy-groups:
   - {name: 🎮 游戏平台, type: select, proxies: [♻️ 智能优选, 🌐 全部节点, ♻️ 自动选择, ♻️ 香港智能, ♻️ 台湾智能, ♻️ 日本智能, ♻️ 狮城智能, ♻️ 美国智能, 直连]}
  
  # 最终兜底 & 工具组
-  - {name: 🐟 漏网之鱼, type: select, proxies: [♻️ 智能优选, ♻️ 自动选择, 直连]}
+  - {name: 🐟 漏网之鱼, type: select, proxies: [♻️ 智能优选， 🌐 全部节点, ♻️ 自动选择, 直连]}
   - {name: 🛑 广告拦截, type: select, proxies: [REJECT, 直连]}
 
   # 核心智能组（必须保留）
@@ -242,4 +242,5 @@ rules:
   - RULE-SET,geolocation-!cn,🚀 默认代理
   - RULE-SET,cn_domain,直连
   - MATCH,🐟 漏网之鱼
+
 
