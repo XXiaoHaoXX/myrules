@@ -1,55 +1,34 @@
-# ================================================
-# 我的 Clash 完美配置模板（2026 版）
-# 特点：
-# - LightGBM 全局智能优选（自动选最佳节点）
-# - 高频组支持手动挑节点（全部节点）
-# - 日常组支持手动挑节点 + 强制地区
-# - 地区智能组隐藏（界面清爽，下拉可见）
-# - MetaCubeX + Loyalsoldier 稳定规则
-# - 去广告 + Fake-IP TUN 模式
-# 使用方法：
-# 用订阅转换工具（如 https://acl4ssr-sub.github.io/）
-# - 填入你的订阅链接
-# - 远程配置填本文件 raw URL
-# - 输出 Clash 格式即可
-# ================================================
+# 必读！！！
+# 注意规则在满足自己需求情况下，尽量做到精简，不要过度复杂，以免影响性能。
+# 跑裸核用户请自行去掉下方控制面板模块的注释。
+#此模板为FAKE-ip +tun 混合模式
+#此配置为nikki仅核心运行配置，请根据自己的插件修改
+#机场链接拉取方式默认为直连，可根据机场情况修改为默认代理
 
-# 机场订阅（请在此处填入你的订阅链接，支持多个）
 proxy-providers:
-  订阅1:  # ← 改成你想要的名字（如 机场A）
-    url: "https://your-subscribe-link1.com/clash"  # ← 替换为你的订阅链接
-    输入: http
+#可以替换成任意名称
+  机场订阅:
+#替换成自己的订阅链接    
+    url: "订阅链接"
+    type: http
     interval: 86400
     health-check:
       enable: true
       url: https://www.gstatic.com/generate_204
       interval: 600
-    proxy: "🚀 默认代理"   # 拉取订阅时走代理，避免直连失败
+#直连没法拉取可改为🚀 默认代理，反之亦然       
+    proxy: "直连"
     override:
-      additional-prefix: "订阅1 |"  # 节点名前缀，可自定义区分来源
+      additional-prefix: "01 |"
     headers:
       User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
+#多个链接可以参照上面，仅修改机场名字和订阅链接，其余复制粘贴即可（从  机场订阅  到    User-Agent  为止）
 
-  # 如需添加更多订阅，直接复制上面一段，改名和 url 即可
-  # 订阅2:
-  #   url: "https://your-subscribe-link2.com/clash"
-  #   type: http
-  #   interval: 86400
-  #   health-check:
-  #     enable: true
-  #     url: https://www.gstatic.com/generate_204
-  #     interval: 600
-  #   proxy: "🚀 默认代理"
-  #   override:
-  #     additional-prefix: "订阅2 |"
-  #   headers:
-  #     User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
-
-# 直连节点
+# 节点信息
 proxies:
   - {name: 直连, type: direct}
 
-# 全局配置
+# 全局配置 
 mixed-port: 7890
 allow-lan: true
 bind-address: "*"
@@ -64,7 +43,14 @@ profile:
   store-selected: true
   store-fake-ip: true
 
-# 嗅探
+# 为防止使用插件朋友遇到面板问题，我注释掉了此模块（裸核请取消注释）。
+external-controller: 0.0.0.0:9090
+secret: ""
+external-ui: ui
+external-ui-name: zashboard
+external-ui-url: "https://github.com/Zephyruso/zashboard/archive/refs/heads/gh-pages.zip"
+
+# 嗅探（fakeip下其实可以不用嗅探）
 sniffer:
   enable: true
   sniff:
@@ -79,7 +65,7 @@ sniffer:
     - "Mijia Cloud"
     - "+.push.apple.com"
 
-# TUN 入站
+# 入站（非裸核最后3项改为false）
 tun:
   enable: true
   stack: mixed
@@ -88,7 +74,7 @@ tun:
   auto-redirect: true
   auto-detect-interface: true
 
-# DNS（Fake-IP 模式）
+# DNS模块
 dns:
   enable: true
   cache-algorithm: arc
@@ -109,15 +95,15 @@ dns:
     - https://dns.alidns.com/dns-query
     - https://doh.pub/dns-query
 
-# 出站策略组（你的最终版）
+# 出站策略组
 proxy-groups:
-  # 主力 & 高频组（保留全部节点 + 地区智能）
+  # 主力 & 高频组（保留 全部节点 方便手动测试）
   - {name: 🚀 默认代理, type: select, proxies: [♻️ 智能优选, 🌐 全部节点, ♻️ 自动选择, ♻️ 香港智能, ♻️ 台湾智能, ♻️ 日本智能, ♻️ 狮城智能, ♻️ 美国智能, 直连]}
   - {name: 📹 YouTube, type: select, proxies: [♻️ 智能优选, 🌐 全部节点, ♻️ 自动选择, ♻️ 香港智能, ♻️ 台湾智能, ♻️ 日本智能, ♻️ 狮城智能, ♻️ 美国智能, 直连]}
   - {name: 🎵 TikTok, type: select, proxies: [♻️ 智能优选, 🌐 全部节点, ♻️ 自动选择, ♻️ 香港智能, ♻️ 台湾智能, ♻️ 日本智能, ♻️ 狮城智能, ♻️ 美国智能, 直连]}
   - {name: 🎥 NETFLIX, type: select, proxies: [♻️ 智能优选, 🌐 全部节点, ♻️ 自动选择, ♻️ 香港智能, ♻️ 台湾智能, ♻️ 日本智能, ♻️ 狮城智能, ♻️ 美国智能, 直连]}
 
-  # 日常专用组（全支持手动挑节点 + 强制地区）
+# 日常专用组（默认精简，只用全局智能）
   - {name: 🍀 Google, type: select, proxies: [♻️ 智能优选, 🌐 全部节点, ♻️ 自动选择, ♻️ 香港智能, ♻️ 台湾智能, ♻️ 日本智能, ♻️ 狮城智能, ♻️ 美国智能, 直连]}
   - {name: 🤖 ChatGPT, type: select, proxies: [♻️ 智能优选, 🌐 全部节点, ♻️ 自动选择, ♻️ 香港智能, ♻️ 台湾智能, ♻️ 日本智能, ♻️ 狮城智能, ♻️ 美国智能, 直连]}
   - {name: 👨🏿‍💻 GitHub, type: select, proxies: [♻️ 智能优选, 🌐 全部节点, ♻️ 自动选择, ♻️ 香港智能, ♻️ 台湾智能, ♻️ 日本智能, ♻️ 狮城智能, ♻️ 美国智能, 直连]}
@@ -129,23 +115,23 @@ proxy-groups:
   - {name: 🍎 Apple, type: select, proxies: [♻️ 智能优选, 🌐 全部节点, ♻️ 自动选择, ♻️ 香港智能, ♻️ 台湾智能, ♻️ 日本智能, ♻️ 狮城智能, ♻️ 美国智能, 直连]}
   - {name: 💬 AI平台, type: select, proxies: [♻️ 智能优选, 🌐 全部节点, ♻️ 自动选择, ♻️ 香港智能, ♻️ 台湾智能, ♻️ 日本智能, ♻️ 狮城智能, ♻️ 美国智能, 直连]}
   - {name: 🎮 游戏平台, type: select, proxies: [♻️ 智能优选, 🌐 全部节点, ♻️ 自动选择, ♻️ 香港智能, ♻️ 台湾智能, ♻️ 日本智能, ♻️ 狮城智能, ♻️ 美国智能, 直连]}
-
-  # 兜底 & 工具
+ 
+ # 最终兜底 & 工具组
   - {name: 🐟 漏网之鱼, type: select, proxies: [♻️ 智能优选, ♻️ 自动选择, 直连]}
   - {name: 🛑 广告拦截, type: select, proxies: [REJECT, 直连]}
 
-  # 核心智能组
+  # 核心智能组（必须保留）
   - {name: ♻️ 智能优选, type: smart, uselightgbm: true, collectdata: true, lazy: true, include-all: true, interval: 300}
   - {name: ♻️ 自动选择, type: url-test, include-all: true, tolerance: 50, interval: 300}
 
-  # 地区智能组（隐藏，主界面不显示，仅下拉可见）
+  # 地区智能组（隐藏在界面，仅供后台调用和专用组引用）
   - {name: ♻️ 香港智能, type: smart, uselightgbm: true, collectdata: true, lazy: true, include-all: true, interval: 300, filter: "(?=.*(港|HK|Hong|🇭🇰))^((?!(台|TW|日|JP|韩|KR|新|SG|美|US)).)*$", hidden: true, hide-in-ui: true}
   - {name: ♻️ 台湾智能, type: smart, uselightgbm: true, collectdata: true, lazy: true, include-all: true, interval: 300, filter: "(?=.*(台|TW|Taiwan|🇹🇼))^((?!(港|HK|日|JP|韩|KR|新|SG|美|US)).)*$", hidden: true, hide-in-ui: true}
   - {name: ♻️ 日本智能, type: smart, uselightgbm: true, collectdata: true, lazy: true, include-all: true, interval: 300, filter: "(?=.*(日|JP|Japan|🇯🇵))^((?!(港|HK|台|TW|韩|KR|新|SG|美|US)).)*$", hidden: true, hide-in-ui: true}
   - {name: ♻️ 狮城智能, type: smart, uselightgbm: true, collectdata: true, lazy: true, include-all: true, interval: 300, filter: "(?=.*(新加坡|坡|狮城|SG|Singapore|🇸🇬))^((?!(港|HK|台|TW|韩|KR|日|JP|美|US)).)*$", hidden: true, hide-in-ui: true}
-  - {name: ♻️ 美国智能, type: smart, uselightgbm: true, collectdata: true, lazy: true, include-all: true, interval: 300, filter: "(?=.*(美|US|States|America|🇺🇸))^((?!(港|HK|台|TW|日|JP|韩|KR|新|SG)).)*$", hidden: true, hide-in-ui: true}
-
-  # 手动挑节点
+  - {name: ♻️ 美国智能, type: smart, uselightgbm: true, collectdata: true, lazy: true, include-all: true, interval: 300, filter: "(?=.*(美|US|States|America|🇺🇸))^((?!(港|HK|台|TW|日|JP|韩|KR|新|SG)).)*$", hidden: true, hide-in-ui: true}  
+  
+  # 手动挑节点神器
   - {name: 🌐 全部节点, type: select, include-all: true}
 
 # 规则集锚点
@@ -154,47 +140,64 @@ rule-anchor:
   domain: &domain {type: http, interval: 86400, behavior: domain, format: mrs}
   class: &class {type: http, interval: 86400, behavior: classical, format: text}
 
-# 规则集（稳定源）
+# 规则集（已优化替换 404/失效链接为 2026 年稳定源）
 rule-providers:
-  fakeipfilter_domain: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/wwqgtxx/clash-rules/release/fakeip-filter.mrs"}
-  private_domain: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat/meta/geo/geosite/private.mrs"}
-  proxylite: {<<: *class, url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/proxy.txt"}
-  youtube_domain: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat/meta/geo/geosite/youtube.mrs"}
-  github_domain: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat/meta/geo/geosite/github.mrs"}
-  tiktok_domain: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat/meta/geo/geosite/tiktok.mrs"}
-  speedtest_domain: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat/meta/geo/geosite/ookla-speedtest.mrs"}
-  geolocation-!cn: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat/meta/geo/geosite/geolocation-!cn.mrs"}
-  cn_domain: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.mrs"}
+  fakeipfilter_domain: {<<: *domain, url: "https://raw.githubusercontent.com/wwqgtxx/clash-rules/release/fakeip-filter.mrs"}
+  private_domain: {<<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/private.mrs"}
+  proxylite: {<<: *class, url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/proxy.txt"}  # 替换原仓库（已失效），用 Loyalsoldier 稳定 proxy 规则
+  youtube_domain: {<<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/youtube.mrs"}
+  github_domain: {<<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/github.mrs"}
+  tiktok_domain: {<<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/tiktok.mrs"}
+  speedtest_domain: {<<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/ookla-speedtest.mrs"}
+  geolocation-!cn: {<<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/geolocation-!cn.mrs"}
+  cn_domain: {<<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/cn.mrs"}
 
-  private_ip: {<<: *ip, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat/meta/geo/geoip/private.mrs"}
-  cn_ip: {<<: *ip, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat/meta/geo/geoip/cn.mrs"}
-  google_ip: {<<: *ip, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat/meta/geo/geoip/google.mrs"}
-  telegram_ip: {<<: *ip, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat/meta/geo/geoip/telegram.mrs"}
-  netflix_ip: {<<: *ip, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat/meta/geo/geoip/netflix.mrs"}
-  apple_ip: {<<: *ip, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat/meta/geo-lite/geoip/apple.mrs"}
+  private_ip: {<<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/private.mrs"}
+  cn_ip: {<<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/cn.mrs"}
+  google_ip: {<<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/google.mrs"}
+  telegram_ip: {<<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/telegram.mrs"}
+  netflix_ip: {<<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geoip/netflix.mrs"}
+  apple_ip: {<<: *ip, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo-lite/geoip/apple.mrs"}
 
-  apple_domain: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat/meta/geo/geosite/apple.mrs"}
-  google_domain: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat/meta/geo/geosite/google.mrs"}
-  microsoft_domain: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat/meta/geo/geosite/microsoft.mrs"}
-  onedrive_domain: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat/meta/geo/geosite/onedrive.mrs"}
-  telegram_domain: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat/meta/geo/geosite/telegram.mrs"}
-  netflix_domain: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat/meta/geo/geosite/netflix.mrs"}
-  paypal_domain: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat/meta/geo/geosite/paypal.mrs"}
+  # 重合部分：统一替换为 MetaCubeX 稳定 .mrs 版本（高效、无 404）
+  apple_domain: {<<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/apple.mrs"}
+  google_domain: {<<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/google.mrs"}
+  microsoft_domain: {<<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/microsoft.mrs"}
+  onedrive_domain: {<<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/onedrive.mrs"}
+  telegram_domain: {<<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/telegram.mrs"}
+  netflix_domain: {<<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/netflix.mrs"}
+  paypal_domain: {<<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/paypal.mrs"}  # MetaCubeX 有 paypal
 
+  # 广告拦截：保留 ACL4SSR BanAD（当前仍可用），用 cdn 加速防 EOF
   banad: {<<: *class, url: "https://cdn.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/BanAD.list"}
   banprogramad: {<<: *class, url: "https://cdn.jsdelivr.net/gh/ACL4SSR/ACL4SSR@master/Clash/BanProgramAD.list"}
 
-  ai_platform: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ai-!cn.mrs"}
-  openai: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat/meta/geo/geosite/openai.mrs"}
+  # AI 平台：MetaCubeX 有 openai 和 category-ai-!cn
+  ai_platform: {<<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/category-ai-!cn.mrs"}
+  openai: {<<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/openai.mrs"}
 
-  steam: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat/meta/geo/geosite/steam.mrs"}
+  # 游戏平台：MetaCubeX 无专用游戏集，精简为常用（Steam 等用 MetaCubeX 覆盖，或删除不必要）
+  # 若需更多游戏规则，可后续添加 Loyalsoldier/games.txt；这里保留 Steam 并用 MetaCubeX 替代部分
+  steam: {<<: *domain, url: "https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/meta/geo/geosite/steam.mrs"}  # 若无，可删除 RULE-SET,steam
+  # 其他游戏（epic/origin/sony 等 ACL4SSR 已失效）：建议删除对应 RULE-SET，或用 Loyalsoldier/proxy 兜底
+  # epic: 删除（无稳定源）
+  # origin: 删除
+  # sony: 删除
+  # ubisoft: 删除（404）
+  # battlenet: 删除（404）
+  # nintendo: 删除
+
+  # 国内 Steam 直连：ACL4SSR SteamCN.list 当前不可用，替换为 Loyalsoldier/direct 或 MetaCubeX cn
+  steamcn_domain: {<<: *domain, url: "https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/direct.txt"}  # 临时用 direct 替代，或删除手动直连域名
 
 # 规则匹配
 rules:
+  # 1. 狭义直连
   - RULE-SET,private_ip,直连,no-resolve
   - RULE-SET,cn_ip,直连
   - RULE-SET,private_domain,直连
   
+  # 2. 狭义代理
   - DOMAIN,a.haiyucloud.com,🚀 默认代理
   - DOMAIN-SUFFIX,haiyucloud.com,🚀 默认代理
   - RULE-SET,apple_ip,🍎 Apple
@@ -202,17 +205,22 @@ rules:
   - RULE-SET,netflix_ip,🎥 NETFLIX
   - RULE-SET,telegram_ip,📲 Telegram
 
+  # 广告拦截
   - RULE-SET,banad,🛑 广告拦截
   - RULE-SET,banprogramad,🛑 广告拦截
   
+  # 国内游戏/常见 CDN 直连
+  - RULE-SET,steamcn_domain,直连  # 若 steamcn_domain 也失效，可删除这行
   - DOMAIN-SUFFIX,qq.com,直连
   - DOMAIN-SUFFIX,tencent.com,直连
   - DOMAIN-SUFFIX,netease.com,直连
   - DOMAIN-SUFFIX,wanmei.com,直连
   - DOMAIN-SUFFIX,163.com,直连
 
+  # 国际游戏平台代理（仅保留 steam，其他已删除对应 provider）
   - RULE-SET,steam,🎮 游戏平台
 
+  # 3. 广义国际服务
   - RULE-SET,proxylite,🚀 默认代理
   - RULE-SET,ai_platform,💬 AI平台
   - RULE-SET,openai,💬 AI平台
@@ -228,7 +236,7 @@ rules:
   - RULE-SET,speedtest_domain,✈️ Speedtest
   - RULE-SET,apple_domain,🍎 Apple
   
+  # 4. 兜底
   - RULE-SET,geolocation-!cn,🚀 默认代理
   - RULE-SET,cn_domain,直连
   - MATCH,🐟 漏网之鱼
-
