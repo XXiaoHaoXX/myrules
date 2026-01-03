@@ -4,13 +4,15 @@
 #此模板为FAKE-ip +tun 混合模式
 #此配置为nikki仅核心运行配置，请根据自己的插件修改
 #机场链接拉取方式默认为直连，可根据机场情况修改为默认代理
-
+#确保自己的代理工具是smart内核！！！！！！！！！！！
+#确保自己的代理工具是smart内核！！！！！！！！！！！
+#确保自己的代理工具是smart内核！！！！！！！！！！！
 proxy-providers:
 #可以替换成任意名称
   机场订阅:
 #替换成自己的订阅链接    
     url: "订阅链接"
-    type: http
+    输入: http
     interval: 86400
     health-check:
       enable: true
@@ -240,3 +242,4 @@ rules:
   - RULE-SET,geolocation-!cn,🚀 默认代理
   - RULE-SET,cn_domain,直连
   - MATCH,🐟 漏网之鱼
+
